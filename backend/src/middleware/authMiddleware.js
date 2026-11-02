@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
 
 const protect = async (req, res, next) => {
   let token;
@@ -9,37 +8,27 @@ const protect = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
-      // Get token from header
       token = req.headers.authorization.split(" ")[1];
 
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("--> Token reçu dans middleware:", token);
 
-      // Get user from the token (exclude password_hash)
-      req.user = await User.findByPk(decoded.id, {
-        attributes: { exclude: ["password_hash"] },
-      });
-
-      if (!req.user) {
-        return res
-          .status(401)
-          .json({ success: false, message: "Not authorized, user not found." });
-      }
-
-      next();
+      const decoded = jwt.verify(token, "lingorise_secret_key_2026");
+      req.user = decoded;
+      return next();
     } catch (error) {
-      console.error("Auth Middleware Error:", error);
-      return res
-        .status(401)
-        .json({ success: false, message: "Not authorized, token failed." });
+      // ON AFFICHE L'ERREUR EXACTE ICI
+      console.error("ERREUR JWT EXACTE:", error.message);
+      return res.status(401).json({
+        success: false,
+        message: `Token failed: ${error.message}`, // On renvoie l'erreur dans Postman pour voir clair
+      });
     }
   }
 
-  if (!token) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Not authorized, no token provided." });
-  }
+  return res.status(401).json({
+    success: false,
+    message: "Not authorized, no token provided.",
+  });
 };
 
 module.exports = { protect };
