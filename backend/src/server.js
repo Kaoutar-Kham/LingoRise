@@ -1,6 +1,11 @@
 require("dotenv").config();
 const { sequelize } = require("./config/database");
-const app = require("./app"); // Import the configured express app
+const app = require("./app");
+
+// Import models to ensure associations and tables are loaded
+require("./models/user");
+require("./models/language");
+require("./models/studySession");
 
 const PORT = process.env.PORT || 5000;
 
@@ -11,7 +16,6 @@ const startServer = async () => {
     console.log("PostgreSQL Database connected successfully.");
 
     // Synchronize all Sequelize models with the database
-    // { alter: true } updates existing tables to match the models without dropping data
     await sequelize.sync({ alter: true });
     console.log("Database models synchronized successfully.");
 
