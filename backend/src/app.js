@@ -1,23 +1,21 @@
 const express = require("express");
 const cors = require("cors");
+
+// Import routes
 const authRoutes = require("./routes/authRoutes");
 const languageRoutes = require("./routes/languageRoutes");
 const studySessionRoutes = require("./routes/studySessionRoutes");
+const goalRoutes = require("./routes/goalRoutes"); // Import Goals routes
 
 const app = express();
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// API Routes
+// Mount routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/languages", languageRoutes);
 app.use("/api/v1/study-sessions", studySessionRoutes);
-
-// Root endpoint
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to LingoRise API" });
-});
+app.use("/api/v1/goals", goalRoutes); // Use Goals routes
 
 module.exports = app;

@@ -1,29 +1,21 @@
-require("dotenv").config();
-const { sequelize } = require("./config/database");
 const app = require("./app");
-
-// Import models to ensure associations and tables are loaded
-require("./models/user");
-require("./models/language");
-require("./models/studySession");
-
+const { sequelize } = require("./models");
 const PORT = process.env.PORT || 5000;
 
-// Function to authenticate database connection, synchronize models, and start the server
 const startServer = async () => {
   try {
     await sequelize.authenticate();
-    console.log("PostgreSQL Database connected successfully.");
+    console.log("Database connected successfully.");
 
-    // Synchronize all Sequelize models with the database
-    await sequelize.sync({ alter: true });
-    console.log("Database models synchronized successfully.");
+    // Sync database models (use { alter: true } if needed)
+    await sequelize.sync();
+    console.log("Database synced.");
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("Unable to connect to the database or sync models:", error);
+    console.error("Unable to connect to the database:", error);
   }
 };
 
