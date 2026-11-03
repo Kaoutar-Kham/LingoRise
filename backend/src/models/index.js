@@ -1,35 +1,34 @@
-const { sequelize } = require("../config/database");
+const { sequelize } = require("../config/database"); 
 const User = require("./user");
-const UserSetting = require("./userSitting");
 const Language = require("./language");
-const StudySession = require("./studySession");
+const UserLanguage = require("./userLanguage");
 const Goal = require("./goal");
+const StudySession = require("./studySession");
 
-// User relations
-User.hasMany(Language, { foreignKey: "userId", onDelete: "CASCADE" });
-Language.belongsTo(User, { foreignKey: "userId" });
+// Relations
+User.belongsToMany(Language, { through: UserLanguage, foreignKey: "userId" });
+Language.belongsToMany(User, {
+  through: UserLanguage,
+  foreignKey: "languageId",
+});
 
-User.hasMany(StudySession, { foreignKey: "userId", onDelete: "CASCADE" });
-StudySession.belongsTo(User, { foreignKey: "userId" });
+UserLanguage.belongsTo(User, { foreignKey: "userId" });
+UserLanguage.belongsTo(Language, { foreignKey: "languageId" });
 
 User.hasMany(Goal, { foreignKey: "userId", onDelete: "CASCADE" });
 Goal.belongsTo(User, { foreignKey: "userId" });
 
-// Language relations
-Language.hasMany(StudySession, {
-  foreignKey: "languageId",
-  onDelete: "CASCADE",
-});
-StudySession.belongsTo(Language, { foreignKey: "languageId", as: "language" });
-
 Language.hasMany(Goal, { foreignKey: "languageId", onDelete: "CASCADE" });
-Goal.belongsTo(Language, { foreignKey: "languageId", as: "language" });
+Goal.belongsTo(Language, { foreignKey: "languageId" });
+
+User.hasMany(StudySession, { foreignKey: "userId", onDelete: "CASCADE" });
+StudySession.belongsTo(User, { foreignKey: "userId" });
 
 module.exports = {
   sequelize,
   User,
-  UserSetting,
   Language,
-  StudySession,
+  UserLanguage,
   Goal,
+  StudySession,
 };
