@@ -15,12 +15,16 @@ const generateToken = (userId) => {
 // @access  Public
 const register = async (req, res) => {
   try {
-    const { name, email, password, timezone } = req.body || {};
+    const { username, name, email, password, timezone } = req.body || {};
 
-    if (!name || !email || !password) {
+    // Supporte à la fois 'username' (envoyé par le validator) et 'name'
+    const userNameToUse = username || name;
+
+    if (!userNameToUse || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Please provide all required fields (name, email, password).",
+        message:
+          "Please provide all required fields (username/name, email, password).",
       });
     }
 
@@ -41,7 +45,7 @@ const register = async (req, res) => {
     const password_hash = await bcrypt.hash(password, salt);
 
     const newUser = await User.create({
-      name,
+      name: userNameToUse,
       email: cleanEmail,
       password_hash,
       timezone: timezone || "UTC",

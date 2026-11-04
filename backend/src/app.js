@@ -23,6 +23,7 @@ app.use("/api/v1/goals", goalRoutes);
 app.use("/api/v1/user-languages", userLanguageRoutes);
 app.use("/api/v1/vocab", vocabularyRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.send({
