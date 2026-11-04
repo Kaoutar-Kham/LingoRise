@@ -7,8 +7,8 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log("Database connected successfully.");
 
-    // Sync database models (use { alter: true } if needed)
-    await sequelize.sync();
+    // Sync database models with alter to automatically update tables
+    await sequelize.sync({ alter: true });
     console.log("Database synced.");
 
     app.listen(PORT, () => {
