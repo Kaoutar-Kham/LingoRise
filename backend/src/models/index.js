@@ -1,41 +1,78 @@
 const { sequelize } = require("../config/database");
 
-// 1. Import Base Models FIRST so tables are created in correct order
+// 1. Import Base Models
 const User = require("./user");
 const Language = require("./language");
 
-// 2. Import Dependent/Through Models SECOND
+// 2. Import Dependent Models
 const UserLanguage = require("./userLanguage");
 const Goal = require("./goal");
 const StudySession = require("./studySession");
 const Vocab = require("./vocabulary");
 
-// 3. Define Associations and Relations
-User.belongsToMany(Language, { through: UserLanguage, foreignKey: "userId" });
+// 3. User <-> Language (Many-to-Many)
+User.belongsToMany(Language, {
+  through: UserLanguage,
+  foreignKey: "userId",
+});
+
 Language.belongsToMany(User, {
   through: UserLanguage,
   foreignKey: "languageId",
 });
 
+// 4. UserLanguage Relations
 UserLanguage.belongsTo(User, { foreignKey: "userId" });
 UserLanguage.belongsTo(Language, { foreignKey: "languageId" });
 
-User.hasMany(Goal, { foreignKey: "userId", onDelete: "CASCADE" });
+// 5. User <-> Goal
+User.hasMany(Goal, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+});
+
 Goal.belongsTo(User, { foreignKey: "userId" });
 
-Language.hasMany(Goal, { foreignKey: "languageId", onDelete: "CASCADE" });
+// 6. Language <-> Goal
+Language.hasMany(Goal, {
+  foreignKey: "languageId",
+  onDelete: "CASCADE",
+});
+
 Goal.belongsTo(Language, { foreignKey: "languageId" });
 
-User.hasMany(StudySession, { foreignKey: "userId", onDelete: "CASCADE" });
+// 7. User <-> StudySession
+User.hasMany(StudySession, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+});
+
 StudySession.belongsTo(User, { foreignKey: "userId" });
 
-// Vocab Relations
-User.hasMany(Vocab, { foreignKey: "userId", onDelete: "CASCADE" });
+// 8. Language <-> StudySession
+Language.hasMany(StudySession, {
+  foreignKey: "languageId",
+});
+
+StudySession.belongsTo(Language, { foreignKey: "languageId" });
+
+// 9. User <-> Vocabulary
+User.hasMany(Vocab, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+});
+
 Vocab.belongsTo(User, { foreignKey: "userId" });
 
-Language.hasMany(Vocab, { foreignKey: "languageId", onDelete: "CASCADE" });
+// 10. Language <-> Vocabulary
+Language.hasMany(Vocab, {
+  foreignKey: "languageId",
+  onDelete: "CASCADE",
+});
+
 Vocab.belongsTo(Language, { foreignKey: "languageId" });
 
+// 11. Export Models
 module.exports = {
   sequelize,
   User,
