@@ -61,7 +61,7 @@ const getStudySessions = async (req, res) => {
       include: [
         {
           model: Language,
-          as: "language",
+          as: "Language", 
           attributes: ["name", "code"],
         },
       ],
