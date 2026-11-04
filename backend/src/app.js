@@ -7,6 +7,8 @@ const studySessionRoutes = require("./routes/studySessionRoutes");
 const goalRoutes = require("./routes/goalRoutes");
 const userLanguageRoutes = require("./routes/userLanguageRoutes");
 const vocabularyRoutes = require("./routes/vocabularyRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+
 
 const app = express();
 
@@ -20,6 +22,7 @@ app.use("/api/v1/study-sessions", studySessionRoutes);
 app.use("/api/v1/goals", goalRoutes);
 app.use("/api/v1/user-languages", userLanguageRoutes);
 app.use("/api/v1/vocab", vocabularyRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.get("/", (req, res) => {
   res.send({
