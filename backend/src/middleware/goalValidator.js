@@ -19,8 +19,8 @@ const validateGoal = [
     ),
   body("languageId")
     .optional()
-    .isInt()
-    .withMessage("L'ID de la langue doit être un nombre valide"),
+    .isUUID()
+    .withMessage("L'ID de la langue doit être un UUID valide"),
 ];
 
 module.exports = {

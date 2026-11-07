@@ -9,6 +9,7 @@ const UserLanguage = require("./userLanguage");
 const Goal = require("./goal");
 const StudySession = require("./studySession");
 const Vocab = require("./vocabulary");
+const UserSitting = require("./userSitting"); 
 
 // 3. User <-> Language (Many-to-Many)
 User.belongsToMany(Language, {
@@ -72,7 +73,15 @@ Language.hasMany(Vocab, {
 
 Vocab.belongsTo(Language, { foreignKey: "languageId" });
 
-// 11. Export Models
+// 11. User <-> UserSitting One-to-One 
+User.hasOne(UserSitting, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+});
+
+UserSitting.belongsTo(User, { foreignKey: "userId" });
+
+// 12. Export Models
 module.exports = {
   sequelize,
   User,
@@ -81,4 +90,5 @@ module.exports = {
   Goal,
   StudySession,
   Vocab,
+  UserSitting, // 👈 Exportnaha hna
 };

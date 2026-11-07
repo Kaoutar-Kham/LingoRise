@@ -1,36 +1,34 @@
 const { DataTypes } = require("sequelize");
-const { sequelize } = require("../config/database");
-
-const UserSetting = sequelize.define(
-  "UserSetting",
+const { sequelize } = require("../config/database"); 
+const UserSitting = sequelize.define(
+  "UserSitting",
   {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    user_id: {
+    userId: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    preferred_language: {
-      type: DataTypes.STRING,
-      defaultValue: "en",
-    },
     theme: {
       type: DataTypes.STRING,
-      defaultValue: "light",
+      defaultValue: "dark",
     },
-    notifications_enabled: {
+    notificationsEnabled: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    dailyReminderTime: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
-    tableName: "user_settings",
+    tableName: "user_sittings",
     timestamps: true,
-    underscored: true,
   },
 );
 
-module.exports = UserSetting;
+module.exports = UserSitting;

@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
+
 const {
   addVocab,
   getVocabs,
   updateVocab,
   deleteVocab,
 } = require("../controllers/vocabularyController");
-const { protect } = require("../middleware/authMiddleware");
 
+const { protect } = require("../middleware/authMiddleware");
 const { validateVocab } = require("../middleware/vocabValidator");
+
 const handleValidationErrors = require("../middleware/handleValidationErrors");
 
 // Protect all vocabulary routes

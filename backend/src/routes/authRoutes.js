@@ -1,19 +1,29 @@
 const express = require("express");
 const router = express.Router();
-const { register, login, getMe } = require("../controllers/authController");
-const { protect } = require("../middleware/authMiddleware");
-
+const authController = require("../controllers/authController");
+const authMiddleware = require("../middleware/authMiddleware");
 const {
   validateRegister,
   validateLogin,
 } = require("../middleware/authValidator");
 const handleValidationErrors = require("../middleware/handleValidationErrors");
 
-// Public routes (avec validation des entrées)
-router.post("/register", validateRegister, handleValidationErrors, register);
-router.post("/login", validateLogin, handleValidationErrors, login);
+console.log("--> Check protect:", typeof authMiddleware.protect);
+console.log("--> Check getMe:", typeof authController.getMe);
 
-// Private route (requires token)
-router.get("/me", protect, getMe);
+router.post(
+  "/register",
+  validateRegister,
+  handleValidationErrors,
+  authController.register,
+);
+router.post(
+  "/login",
+  validateLogin,
+  handleValidationErrors,
+  authController.login,
+);
+
+router.get("/me", authMiddleware.protect, authController.getMe);
 
 module.exports = router;

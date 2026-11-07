@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
+
 const {
   createGoal,
   getGoals,
   updateGoal,
   deleteGoal,
 } = require("../controllers/goalController");
-const { protect } = require("../middleware/authMiddleware");
 
+const { protect } = require("../middleware/authMiddleware");
 const { validateGoal } = require("../middleware/goalValidator");
+
 const handleValidationErrors = require("../middleware/handleValidationErrors");
 
 // All routes are protected with JWT

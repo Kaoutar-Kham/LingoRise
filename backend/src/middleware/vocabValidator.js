@@ -9,8 +9,8 @@ const validateVocab = [
   body("languageId")
     .notEmpty()
     .withMessage("L'identifiant de la langue est obligatoire")
-    .isInt()
-    .withMessage("L'identifiant de la langue doit être un nombre entier"),
+    .isUUID()
+    .withMessage("L'identifiant de la langue doit être un UUID valide"),
 ];
 
 module.exports = { validateVocab };

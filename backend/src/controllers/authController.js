@@ -3,11 +3,14 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const UserSetting = require("../models/userSitting");
 
-// Helper function: Use exact hardcoded secret to guarantee matching signature
 const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, "lingorise_secret_key_2026", {
-    expiresIn: "7d",
-  });
+  return jwt.sign(
+    { id: userId },
+    process.env.JWT_SECRET || "lingorise_secret_key_2026",
+    {
+      expiresIn: "7d",
+    },
+  );
 };
 
 // @desc    Register a new user
@@ -16,8 +19,6 @@ const generateToken = (userId) => {
 const register = async (req, res) => {
   try {
     const { username, name, email, password, timezone } = req.body || {};
-
-    // Supporte à la fois 'username' (envoyé par le validator) et 'name'
     const userNameToUse = username || name;
 
     if (!userNameToUse || !email || !password) {
@@ -29,10 +30,7 @@ const register = async (req, res) => {
     }
 
     const cleanEmail = email.toLowerCase().trim();
-
-    const existingUser = await User.findOne({
-      where: { email: cleanEmail },
-    });
+    const existingUser = await User.findOne({ where: { email: cleanEmail } });
 
     if (existingUser) {
       return res.status(409).json({
@@ -53,10 +51,9 @@ const register = async (req, res) => {
 
     if (UserSetting) {
       await UserSetting.create({
-        user_id: newUser.id,
-        preferred_language: "en",
-        theme: "light",
-        notifications_enabled: true,
+        userId: newUser.id,
+        theme: "dark",
+        notificationsEnabled: true,
       });
     }
 
@@ -98,10 +95,7 @@ const login = async (req, res) => {
     }
 
     const cleanEmail = email.toLowerCase().trim();
-
-    const user = await User.findOne({
-      where: { email: cleanEmail },
-    });
+    const user = await User.findOne({ where: { email: cleanEmail } });
 
     if (!user) {
       return res.status(401).json({
